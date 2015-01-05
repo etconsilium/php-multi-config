@@ -18,7 +18,8 @@
         "php": ">= 5.5.0",
         "symfony/yaml": "dev-master",
         "rodneyrehm/plist": "dev-master",
-        "etconsilium/php-recursive-array-object": "dev-master"
+        "etconsilium/php-recursive-array-object": "dev-master",
+        "etconsilium/php-json-fix": "dev-master"
     },
     "autoload": {
         "psr-4": {

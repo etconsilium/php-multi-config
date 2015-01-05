@@ -5,3 +5,8 @@ Config is a lightweight configuration file loader &amp; formatter that supports 
 
 Based on https://github.com/noodlehaus/config
 
+ps:
+---
+
+`"etconsilium/php-json-fix": "dev-master"` _optional_
+
