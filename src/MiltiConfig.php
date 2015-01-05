@@ -35,12 +35,13 @@ class Config extends \RecursiveArrayObject
      * Types: PHP, Ini, XML, JSON, YAML, Plist files and Array()
      */
     const ARR = 'Array';
-    const PHP = 'Php';
+    const CVS = 'Cvs';
     const INI = 'Ini';
+    const PLST = 'Plist';
+    const CFPL = 'Plist';
+    const PHP = 'Php';
     const XML = 'Xml';
     const YAML = 'Yaml';
-    const PLST = 'Plist';
-    const CVS = 'Cvs';
 
     protected $ext_list = [
         self::ARR => []
@@ -54,7 +55,7 @@ class Config extends \RecursiveArrayObject
 
 
     /**
-     * Static method for loading a config instance.
+     * Static method for empiric loading a config instance.
      * @deprecated
      *
      * @param  string $path
@@ -98,31 +99,64 @@ class Config extends \RecursiveArrayObject
     /**
      * Loads a supported configuration file format.
      *
-     * @param  string $path
+     * @param  mixed $data
+     * @param  const $type
      *
      * @return $this
      *
-     * @throws FileNotFoundException      If a file is not found at `$path`
-     * @throws UnsupportedFormatException If `$path` is an unsupported file format
+     * @throws UnsupportedFormatException If `$type` is an unsupported format. or another error
      */
-    public function __construct($path)
+//     * @throws FileNotFoundException      If a file is not found at `$path`
+    public function __construct($data=[], $type=static::ARR)
     {
-        // Get file information
-        $info = pathinfo($path);
+        switch ($type) :
+            case static::ARR :
+                $this = $data;
+                break;
+            case static::CVS :
+                throw new UnsupportedFormatException('Not yet');
+                break;
 
-        // Check if config file exists or throw an exception
-        if (!file_exists($path)) {
-            throw new FileNotFoundException("Configuration file: [$path] cannot be found");
-        }
+            case static::INI :
+                break;
 
-        // Check if a load-* method exists for the file extension, if not throw exception
-        $load_method = 'load' . ucfirst($info['extension']);
-        if (!method_exists(__CLASS__, $load_method)) {
-            throw new UnsupportedFormatException('Unsupported configuration format');
-        }
+            case static::PLST :
+            case static::CFPL :
+                break;
 
-        // Try and load file
-        $this->data = $this->$load_method($path);
+            case static::PHP :
+                break;
+
+            case static::XML :
+                break;
+
+            case static::YAML :
+                break;
+
+            default :
+                throw new UnsupportedFormatException('Unsupported configuration format');
+                break;
+        endswitch;
+
+        $this->_type = $type;
+
+
+//        // Get file information
+//        $info = pathinfo($path);
+//
+//        // Check if config file exists or throw an exception
+//        if (!file_exists($path)) {
+//            throw new FileNotFoundException("Configuration file: [$path] cannot be found");
+//        }
+//
+//        // Check if a load-* method exists for the file extension, if not throw exception
+//        $load_method = 'load' . ucfirst($info['extension']);
+//        if (!method_exists(__CLASS__, $load_method)) {
+//            throw new UnsupportedFormatException('Unsupported configuration format');
+//        }
+//
+//        // Try and load file
+//        $this->data = $this->$load_method($path);
 
         return $this;
     }
