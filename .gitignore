@@ -1,0 +1,5 @@
+tests/coverage
+vendor
+composer.lock
+/nbproject/private/
+*.sublime*

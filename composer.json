@@ -1,0 +1,27 @@
+{
+    "name": "etconsilium/php-multi-config",
+    "type": "library",
+    "description": "lightweight configuration file loader & formatter that supports PHP, Ini, XML, JSON, YAML, Plist files and Array(); based on noodlehaus/config",
+    "keywords": ["configuration", "config", "json", "yaml", "ini", "xml", "plist", "array", "unframework"],
+    "homepage": "https://github.com/etconsilium/php-multi-config",
+    "license": "MIT",
+    "based-on": "https://github.com/noodlehaus/config",
+    "authors": [
+    {
+        "name": "Vlad A. Koltsov",
+        "role": "Developer",
+        "homepage": "http://etconsilium.github.io/",
+        "email": "etconsilium@users.noreply.github.com"
+    }
+    ],
+    "require": {
+        "php": ">= 5.5.0",
+        "symfony/yaml": "dev-master",
+        "rodneyrehm/plist": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "MiltiConfig\\": "src/"
+        }
+    }
+}
