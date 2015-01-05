@@ -22,7 +22,7 @@ class Config extends \RecursiveArrayObject
      *
      * @var array
      */
-    protected $cache = array();
+//    protected $cache = array();
 
     /**
      * Realpath configuration file
@@ -59,7 +59,7 @@ class Config extends \RecursiveArrayObject
      *
      * @param  string $path
      *
-     * @return Config
+     * @return MultiConfig
      */
     public static function load($path)
     {
@@ -91,7 +91,7 @@ class Config extends \RecursiveArrayObject
      */
     public function save($filename, $type=null)
     {
-        return ;
+        return $this;
     }
 
 
@@ -124,6 +124,7 @@ class Config extends \RecursiveArrayObject
         // Try and load file
         $this->data = $this->$load_method($path);
 
+        return $this;
     }
 
     /**
@@ -131,7 +132,7 @@ class Config extends \RecursiveArrayObject
      *
      * @param  string $path
      *
-     * @return array
+     * @return $this;
      *
      * @throws ParseException             If the PHP file throws an exception
      * @throws UnsupportedFormatException If the PHP file does not return an array
@@ -161,7 +162,7 @@ class Config extends \RecursiveArrayObject
             throw new UnsupportedFormatException('PHP file does not return an array');
         }
 
-        return $temp;
+        return $this;
     }
 
     /**
@@ -169,7 +170,7 @@ class Config extends \RecursiveArrayObject
      *
      * @param  string $path
      *
-     * @return array
+     * @return $this;
      *
      * @throws ParseException If there is an error parsing the INI file
      */
@@ -182,7 +183,7 @@ class Config extends \RecursiveArrayObject
             throw new ParseException($error);
         }
 
-        return $data;
+        return $this;
     }
 
     /**
@@ -190,7 +191,7 @@ class Config extends \RecursiveArrayObject
      *
      * @param  string $path
      *
-     * @return array
+     * @return $this;
      *
      * @throws ParseException If there is an error parsing the JSON file
      */
@@ -213,7 +214,7 @@ class Config extends \RecursiveArrayObject
             throw new ParseException($error);
         }
 
-        return $data;
+        return $this;
     }
 
 
@@ -222,7 +223,7 @@ class Config extends \RecursiveArrayObject
      *
      * @param  string $path
      *
-     * @return array
+     * @return $this;
      *
      * @throws ParseException If there is an error parsing the XML file
      */
@@ -247,7 +248,7 @@ class Config extends \RecursiveArrayObject
 
         $data = json_decode(json_encode($data), true);
 
-        return $data;
+        return $this;
     }
 
     /**
@@ -255,7 +256,7 @@ class Config extends \RecursiveArrayObject
      *
      * @param  string $path
      *
-     * @return array
+     * @return $this;
      *
      * @throws ParseException If If there is an error parsing the YAML file
      */
@@ -273,7 +274,7 @@ class Config extends \RecursiveArrayObject
             );
         }
 
-        return $data;
+        return $this;
     }
 
     /**
@@ -336,7 +337,7 @@ class Config extends \RecursiveArrayObject
      * @param  string $key
      * @param  mixed  $value
      *
-     * @return $this
+     * @return $this;
      */
     public function set($key, $value)
     {
@@ -390,7 +391,7 @@ class Config extends \RecursiveArrayObject
         finally {
             return !$e;
         }
-        return $this;
+        //  return $this;
     }
 
     /**
@@ -399,11 +400,12 @@ class Config extends \RecursiveArrayObject
      * @param  string $offset
      * @param  mixed  $value
      *
-     * @return void
+     * @return $this;
      */
     public function offsetSet($offset, $value)
     {
         $this->set($offset, $value);
+        return $this;
     }
 
     /**
@@ -411,7 +413,7 @@ class Config extends \RecursiveArrayObject
      *
      * @param  string $offset
      *
-     * @return $this
+     * @return $this;
      */
     public function offsetUnset($offset)
     {
