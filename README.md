@@ -1,0 +1,4 @@
+php-multi-config
+================
+
+Config is a lightweight configuration file loader &amp; formatter that supports PHP, Ini, XML, JSON, YAML, Plist files and Array()
