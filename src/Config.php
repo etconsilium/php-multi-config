@@ -29,7 +29,7 @@ class Config extends \RecursiveArrayObject
      *
      * @var string
      */
-    protected $filename = null;
+    protected $_filename = null;
 
     /**
      * Types: PHP, Ini, XML, JSON, YAML, Plist files and Array()
@@ -37,22 +37,30 @@ class Config extends \RecursiveArrayObject
     const ARR = 'Array';
     const CVS = 'Cvs';
     const INI = 'Ini';
+    const OBJ = 'Object';
     const PLST = 'Plist';
     const CFPL = 'Plist';
     const PHP = 'Php';
     const XML = 'Xml';
     const YAML = 'Yaml';
 
-    protected $ext_list = [
+    protected $_ext_list = [
         self::ARR => []
         ,self::CVS => ['cvs','txt','']
         ,self::INI => ['ini','init']
+        ,self::OBJ => []
         ,self::PHP => ['php','inc']
         ,self::PLST => []   //  ?
         ,self::XML => ['xml']
         ,self::YAML => ['yml','yaml']
     ];
 
+    /**
+     * current type
+     *
+     * @var type
+     */
+    protected $_type = null;
 
     /**
      * Static method for empiric loading a config instance.
@@ -95,6 +103,24 @@ class Config extends \RecursiveArrayObject
         return $this;
     }
 
+    /**
+     * Get configuration as array
+     *
+     * @param string $type const::ARR|const::OBJ [optional]
+     *
+     * @return mixed
+     *
+     * @throws UnsupportedFormatException
+     */
+    public function fetchAll($type=ARR)
+    {
+        if (static::ARR == $type)
+            return (array)  $this;
+        elseif (static::OBJ == $type)
+            return (object)  $this;
+        else
+            throw new UnsupportedFormatException("`$type` is an unsupported format");
+    }
 
     /**
      * Loads a supported configuration file format.
@@ -107,11 +133,12 @@ class Config extends \RecursiveArrayObject
      * @throws UnsupportedFormatException If `$type` is an unsupported format. or another error
      */
 //     * @throws FileNotFoundException      If a file is not found at `$path`
-    public function __construct($data=[], $type=static::ARR)
+    public function __construct($data=[], $type=null)
     {
+        if (is_null($type)) $type=static::ARR;
         switch ($type) :
             case static::ARR :
-                $this = $data;
+                parent::__construct($data);
                 break;
             case static::CVS :
                 throw new UnsupportedFormatException('Not yet');
@@ -343,7 +370,7 @@ class Config extends \RecursiveArrayObject
 //        }
 
         $segs = explode('.', $key);
-        $root = $this->data;
+        $root = $this;
         $k = [];
 
         // nested case
@@ -388,76 +415,6 @@ class Config extends \RecursiveArrayObject
 
         // Assign value at target node
 //        $this->cache[$key] = $root = $value;
-
-        return $this;
-    }
-
-    /**
-     * ArrayAccess Methods
-     */
-
-    /**
-     * Gets a value using the offset as a key
-     *
-     * @param  string $offset
-     *
-     * @return mixed
-     */
-    public function offsetGet($offset)
-    {
-        return $this->get($offset);
-    }
-
-    /**
-     * Checks if a key exists
-     *
-     * @param  string $offset
-     *
-     * @return bool
-     */
-    public function offsetExists($offset)
-    {
-        $e = false;
-        try {
-            $this->get($offset);
-        }
-        catch (Exception $e) {}
-        finally {
-            return !$e;
-        }
-        //  return $this;
-    }
-
-    /**
-     * Sets a value using the offset as a key
-     *
-     * @param  string $offset
-     * @param  mixed  $value
-     *
-     * @return $this;
-     */
-    public function offsetSet($offset, $value)
-    {
-        $this->set($offset, $value);
-        return $this;
-    }
-
-    /**
-     * Deletes a key and its value
-     *
-     * @param  string $offset
-     *
-     * @return $this;
-     */
-    public function offsetUnset($offset)
-    {
-        $segs = explode('.', $key);
-        $root = &$this;
-
-        while ($part = array_shift($segs) && count($segs) > 0) {
-            $root = &$root[$part];
-        }
-        unset ($root[$part]);
 
         return $this;
     }
