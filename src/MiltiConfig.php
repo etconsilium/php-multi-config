@@ -411,11 +411,19 @@ class Config extends \RecursiveArrayObject
      *
      * @param  string $offset
      *
-     * @return void
+     * @return $this
      */
     public function offsetUnset($offset)
     {
-        $this->set($offset, NULL);
+        $segs = explode('.', $key);
+        $root = &$this;
+
+        while ($part = array_shift($segs) && count($segs) > 0) {
+            $root = &$root[$part];
+        }
+        unset ($root[$part]);
+
+        return $this;
     }
 
 
