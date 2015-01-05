@@ -330,18 +330,18 @@ class Config extends \RecursiveArrayObject
     }
 
     /**
-    * Function for setting configuration values, using
-    * either simple or nested keys.
-    *
-    * @param  string $key
-    * @param  mixed  $value
-    *
-    * @return void
-    */
-    public function set($key, $value) {
-
+     * Function for setting configuration values, using
+     * either simple or nested keys.
+     *
+     * @param  string $key
+     * @param  mixed  $value
+     *
+     * @return $this
+     */
+    public function set($key, $value)
+    {
         $segs = explode('.', $key);
-        $root = &$this->data;
+        $root = &$this;
 
         // Look for the key, creating nested keys if needed
         while ($part = array_shift($segs)) {
@@ -352,7 +352,9 @@ class Config extends \RecursiveArrayObject
         }
 
         // Assign value at target node
-        $this->cache[$key] = $root = $value;
+//        $this->cache[$key] = $root = $value;
+
+        return $this;
     }
 
     /**
