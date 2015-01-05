@@ -15,15 +15,8 @@ use \CFPropertyList as Plist;
  * @license    MIT
  * @based      on https://github.com/noodlehaus/config
  */
-class Config
+class Config extends \RecursiveArrayObject
 {
-    /**
-     * Stores the configuration data
-     *
-     * @var array|null
-     */
-    protected $data = null;
-
     /**
      * Caches the configuration data
      *
@@ -61,13 +54,13 @@ class Config
 
 
     /**
-    * Static method for loading a config instance.
-    * @deprecated
-    *
-    * @param  string $path
-    *
-    * @return Config
-    */
+     * Static method for loading a config instance.
+     * @deprecated
+     *
+     * @param  string $path
+     *
+     * @return Config
+     */
     public static function load($path)
     {
         return new static($path);
@@ -103,15 +96,15 @@ class Config
 
 
     /**
-    * Loads a supported configuration file format.
-    *
-    * @param  string $path
-    *
-    * @return void
-    *
-    * @throws FileNotFoundException      If a file is not found at `$path`
-    * @throws UnsupportedFormatException If `$path` is an unsupported file format
-    */
+     * Loads a supported configuration file format.
+     *
+     * @param  string $path
+     *
+     * @return $this
+     *
+     * @throws FileNotFoundException      If a file is not found at `$path`
+     * @throws UnsupportedFormatException If `$path` is an unsupported file format
+     */
     public function __construct($path)
     {
         // Get file information
@@ -295,39 +288,45 @@ class Config
     }
 
     /**
-    * Gets a configuration setting using a simple or nested key.
-    * Nested keys are similar to JSON paths that use the dot
-    * dot notation.
-    *
-    * @param  string $key
-    * @param  mixed  $default
-    *
-    * @return mixed
-    */
+     * Gets a configuration setting using a simple or nested key.
+     * Nested keys are similar to JSON paths that use the dot
+     * dot notation.
+     *
+     * @also U can use directly access to value as an object property
+     *
+     * @param  string $key
+     * @param  mixed  $default
+     *
+     * @return mixed
+     * @throws KeyNotExistException     If a key is not found in the chain
+     */
     public function get($key, $default = null) {
 
-        // Check if already cached
-        if (isset($this->cache[$key])) {
-            return $this->cache[$key];
-        }
+//        // Check if already cached
+//        if (isset($this->cache[$key])) {
+//            return $this->cache[$key];
+//        }
 
         $segs = explode('.', $key);
         $root = $this->data;
+        $k = [];
 
         // nested case
         foreach ($segs as $part) {
+            $k[]=$part;
             if (isset($root[$part])){
                 $root = $root[$part];
                 continue;
             }
             else {
-                $root = $default;
+                throw new Exception\KeyNotExistException('Key ['.implode('.', $k).'] not exists');
                 break;
             }
         }
 
         // whatever we have is what we needed
-        return ($this->cache[$key] = $root);
+//        return ($this->cache[$key] = $root);
+        return $root;
     }
 
     /**
