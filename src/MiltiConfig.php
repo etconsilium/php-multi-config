@@ -382,7 +382,15 @@ class Config extends \RecursiveArrayObject
      */
     public function offsetExists($offset)
     {
-        return !is_null($this->get($offset));
+        $e = false;
+        try {
+            $this->get($offset);
+        }
+        catch (Exception $e) {}
+        finally {
+            return !$e;
+        }
+        return $this;
     }
 
     /**
