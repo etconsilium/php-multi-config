@@ -75,9 +75,9 @@ class Config extends \RecursiveArrayObject
         return new static($path);
     }
 
-    public static function loadFromFile($filename, $type=null)
+    public static function loadFromFile($filename, $type=self::JSON)
     {
-
+        return new Config($filename, $type);
     }
 
     public static function loadFromString($string, $type=null)
@@ -87,7 +87,7 @@ class Config extends \RecursiveArrayObject
 
     public static function loadFromArray(array $array)
     {
-
+        return new Config($array, ARR);
     }
 
     /**
@@ -112,7 +112,7 @@ class Config extends \RecursiveArrayObject
      *
      * @throws UnsupportedFormatException
      */
-    public function fetchAll($type=ARR)
+    public function fetchAll($type=self::ARR)
     {
         if (static::ARR == $type)
             return (array)  $this;
@@ -133,9 +133,8 @@ class Config extends \RecursiveArrayObject
      * @throws UnsupportedFormatException If `$type` is an unsupported format. or another error
      */
 //     * @throws FileNotFoundException      If a file is not found at `$path`
-    public function __construct($data=[], $type=null)
+    public function __construct($data=[], $type=self::ARR)
     {
-        if (is_null($type)) $type=static::ARR;
         switch ($type) :
             case static::ARR :
                 parent::__construct($data);
@@ -145,6 +144,7 @@ class Config extends \RecursiveArrayObject
                 break;
 
             case static::INI :
+                $this->loadIni($data);
                 break;
 
             case static::PLST :
@@ -152,12 +152,15 @@ class Config extends \RecursiveArrayObject
                 break;
 
             case static::PHP :
+                $this->loadPhp($data);
                 break;
 
             case static::XML :
+                $this->loadXml($data);
                 break;
 
             case static::YAML :
+                $this->loadYaml($data);
                 break;
 
             default :
@@ -223,6 +226,8 @@ class Config extends \RecursiveArrayObject
             throw new UnsupportedFormatException('PHP file does not return an array');
         }
 
+        $this->exchangeArray($temp);
+
         return $this;
     }
 
@@ -243,6 +248,8 @@ class Config extends \RecursiveArrayObject
             $error = error_get_last();
             throw new ParseException($error);
         }
+
+        $this->exchangeArray($data);
 
         return $this;
     }
@@ -274,6 +281,8 @@ class Config extends \RecursiveArrayObject
             );
             throw new ParseException($error);
         }
+
+        $this->exchangeArray($data);
 
         return $this;
     }
@@ -309,6 +318,8 @@ class Config extends \RecursiveArrayObject
 
         $data = json_decode(json_encode($data), true);
 
+        $this->exchangeArray($data);
+
         return $this;
     }
 
@@ -334,6 +345,8 @@ class Config extends \RecursiveArrayObject
                 )
             );
         }
+
+        $this->exchangeArray($data);
 
         return $this;
     }
