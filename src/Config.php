@@ -4,7 +4,7 @@ use \MultiConfig\Exception\ParseException;
 use \MultiConfig\Exception\FileNotFoundException;
 use \MultiConfig\Exception\UnsupportedFormatException;
 use \Symfony\Component\Yaml\Yaml as Yaml;
-use \CFPropertyList as Plist;
+use \CFPropertyList\CFPropertyList as Plist;
 
 /**
  * Multi-Config
@@ -155,6 +155,7 @@ class Config extends \RecursiveArrayObject
 
             case static::PLST :
             case static::CFPL :
+                $this->loadPlist($data);
                 break;
 
             case static::PHP :
@@ -340,8 +341,10 @@ class Config extends \RecursiveArrayObject
      */
     protected function loadYaml($path)
     {
+        if (!is_file($path) || !is_readable($path))
+            throw new Exception\FileNotFoundException("Not found [$path]".PHP_EOL);
         try {
-            $data = Yaml::parse($path);
+            $data = Yaml::parse( file_get_contents($path) );
         }
         catch(\Exception $ex) {
             throw new ParseException(
@@ -354,6 +357,13 @@ class Config extends \RecursiveArrayObject
 
         $this->exchangeArray($data);
 
+        return $this;
+    }
+
+
+    protected function loadPlist($path)
+    {
+        $this->exchangeArray( (new Plist($path))->toArray() );
         return $this;
     }
 

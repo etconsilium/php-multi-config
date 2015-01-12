@@ -1,0 +1,32 @@
+
+cache:
+  memcached: # <-- uniq id
+    adapter:
+        name: Memcached # <-- adapter's name
+        persistent: false
+        servers: [ ['localhost',11211,50] ]
+    priority:
+        save: 100 # last
+        delete: 10
+        fetch: 10 # first
+        precheck: true # auto contains()
+filesystem:
+    adapter:
+        name: Filesystem
+        dir: ''
+    priority:
+        fetch: 100
+        save: 10
+        delete: 10
+
+
+
+menu:
+  file:
+    name:
+    hotkey: 
+    command:
+    submenu:
+      fileopen:
+      filesave:
+      fileclose:
