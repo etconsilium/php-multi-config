@@ -37,6 +37,7 @@ class Config extends \RecursiveArrayObject
     const ARR = 'Array';
     const CVS = 'Cvs';
     const INI = 'Ini';
+    const JSON = 'Json';
     const OBJ = 'Object';
     const PLST = 'Plist';
     const CFPL = 'Plist';
@@ -48,6 +49,7 @@ class Config extends \RecursiveArrayObject
         self::ARR => []
         ,self::CVS => ['cvs','txt','']
         ,self::INI => ['ini','init']
+        ,self::JSON => ['json','jsonp','js']
         ,self::OBJ => []
         ,self::PHP => ['php','inc']
         ,self::PLST => []   //  ?
@@ -145,6 +147,10 @@ class Config extends \RecursiveArrayObject
 
             case static::INI :
                 $this->loadIni($data);
+                break;
+
+            case static::JSON :
+                $this->loadJson($data);
                 break;
 
             case static::PLST :
