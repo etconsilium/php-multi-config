@@ -4,8 +4,10 @@
     "description": "lightweight configuration file loader & formatter that supports PHP, Ini, XML, JSON, YAML, Plist files and Array(); based on noodlehaus/config",
     "keywords": ["configuration", "config", "json", "yaml", "ini", "xml", "plist", "array", "unframework"],
     "homepage": "https://github.com/etconsilium/php-multi-config",
-    "license": "MIT",
     "based-on": "https://github.com/noodlehaus/config",
+    "license": "MIT",
+    "copyright": "(cc-by-sa)",
+    "version": "1.0.5",
     "authors": [
     {
         "name": "Vlad A. Koltsov",
